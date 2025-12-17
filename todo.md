@@ -27,3 +27,11 @@
 [x] Verify site creation with different domains
 [x] Test site access via all supported domains
 [x] Validate domain configuration and fallbacks
+
+## Render.com Deployment Issues
+[x] Check current routing configuration for production
+[x] Fix static file serving for HTML pages
+[x] Verify domain handling for Render.com deployment
+[x] Update server configuration for production environment
+[x] Test multi-domain routing in production context
+[x] Ensure proper fallback handling for all routes

@@ -519,13 +519,30 @@ app.post('/api/upload', authenticateToken, async (req, res) => {
     user.sites.push(site);
     await fs.writeFile(USERS_FILE, JSON.stringify(users, null, 2));
 
+    // Determine URLs based on environment
+    const isProduction = process.env.NODE_ENV === 'production';
+    let url, primaryUrl, fullUrl;
+    
+    if (isProduction) {
+      // For Render.com, use the /site/ path format
+      url = `/site/${userSubdomain}/${finalSlug}/`;
+      primaryUrl = url;
+      fullUrl = `${req.protocol}://${req.get('host')}/site/${userSubdomain}/${finalSlug}/`;
+    } else {
+      // For local development, use the actual domain format
+      url = urls[selectedDomain];
+      primaryUrl = urls[PRIMARY_DOMAIN];
+      fullUrl = url;
+    }
+
     res.json({ 
       success: true, 
       slug: finalSlug,
-      url: urls[selectedDomain],
+      url: url,
       urls: urls,
       domain: selectedDomain,
-      primaryUrl: urls[PRIMARY_DOMAIN],
+      primaryUrl: primaryUrl,
+      fullUrl: fullUrl,
       message: 'Site published successfully!',
       site
     });
@@ -553,11 +570,30 @@ app.get('/api/user/sites', authenticateToken, async (req, res) => {
       return res.json([]);
     }
 
-    const sites = user.sites.map(site => ({
-      ...site,
-      url: site.urls[site.domain] || site.urls[PRIMARY_DOMAIN],
-      primaryUrl: site.urls[PRIMARY_DOMAIN]
-    }));
+    const sites = user.sites.map(site => {
+      // Check if we're in production (Render.com)
+      const isProduction = process.env.NODE_ENV === 'production';
+      let url, primaryUrl, fullUrl;
+      
+      if (isProduction) {
+        // For Render.com, use the /site/ path format
+        url = `/site/${user.subdomain}/${site.slug}/`;
+        primaryUrl = url;
+        fullUrl = `${req.protocol}://${req.get('host')}/site/${user.subdomain}/${site.slug}/`;
+      } else {
+        // For local development, use the actual domain format
+        url = site.urls[site.domain] || site.urls[PRIMARY_DOMAIN];
+        primaryUrl = site.urls[PRIMARY_DOMAIN];
+        fullUrl = url;
+      }
+      
+      return {
+        ...site,
+        url: url,
+        primaryUrl: primaryUrl,
+        fullUrl: fullUrl
+      };
+    });
 
     res.json(sites);
   } catch (error) {
@@ -565,6 +601,123 @@ app.get('/api/user/sites', authenticateToken, async (req, res) => {
     res.json([]);
   }
 });
+
+// Serve user sites via subdomain routing (for local development)
+app.get('/:subdomain/:site/', async (req, res, next) => {
+  try {
+    const { subdomain, site } = req.params;
+    
+    // Check if this is a user subdomain
+    const userDir = path.join(USERS_DIR, subdomain, site);
+    const filePath = path.join(userDir, 'index.html');
+
+    try {
+      // Update visit count
+      let users = {};
+      try {
+        const usersData = await fs.readFile(USERS_FILE, 'utf8');
+        users = JSON.parse(usersData);
+        
+        // Find user by subdomain
+        const user = Object.values(users).find(u => u.subdomain === subdomain);
+        if (user) {
+          const siteData = user.sites.find(s => s.slug === site);
+          if (siteData) {
+            siteData.visits = (siteData.visits || 0) + 1;
+            await fs.writeFile(USERS_FILE, JSON.stringify(users, null, 2));
+          }
+        }
+      } catch (error) {
+        console.error('Error updating visit count:', error);
+      }
+
+      // Serve the file
+      res.sendFile(filePath);
+    } catch (error) {
+      next();
+    }
+  } catch (error) {
+    next();
+  }
+});
+
+// Render.com compatible site serving
+app.get('/site/:subdomain/:site/', async (req, res, next) => {
+  try {
+    const { subdomain, site } = req.params;
+    
+    // Check if this is a user subdomain
+    const userDir = path.join(USERS_DIR, subdomain, site);
+    const filePath = path.join(userDir, 'index.html');
+
+    try {
+      // Update visit count
+      let users = {};
+      try {
+        const usersData = await fs.readFile(USERS_FILE, 'utf8');
+        users = JSON.parse(usersData);
+        
+        // Find user by subdomain
+        const user = Object.values(users).find(u => u.subdomain === subdomain);
+        if (user) {
+          const siteData = user.sites.find(s => s.slug === site);
+          if (siteData) {
+            siteData.visits = (siteData.visits || 0) + 1;
+            await fs.writeFile(USERS_FILE, JSON.stringify(users, null, 2));
+          }
+        }
+      } catch (error) {
+        console.error('Error updating visit count:', error);
+      }
+
+      // Serve the file
+      res.sendFile(filePath);
+    } catch (error) {
+      next();
+    }
+  } catch (error) {
+    next();
+  }
+});
+
+// Serve user subdomain root (redirect to first site or dashboard)
+app.get('/:subdomain/', async (req, res, next) => {
+  try {
+    const { subdomain } = req.params;
+    
+    // Find user by subdomain
+    let users = {};
+    try {
+      const usersData = await fs.readFile(USERS_FILE, 'utf8');
+      users = JSON.parse(usersData);
+    } catch (error) {
+      return next();
+    }
+
+    const user = Object.values(users).find(u => u.subdomain === subdomain);
+    if (!user) {
+      return next();
+    }
+
+    // Redirect to first site if exists, otherwise to dashboard
+    if (user.sites.length > 0) {
+      const firstSite = user.sites[0];
+      const primaryUrl = firstSite.urls[firstSite.domain] || firstSite.urls[PRIMARY_DOMAIN];
+      // For local development, use relative path
+      if (process.env.NODE_ENV !== 'production') {
+        res.redirect(`/${subdomain}/${firstSite.slug}/`);
+      } else {
+        res.redirect(primaryUrl);
+      }
+    } else {
+      res.redirect('/dashboard');
+    }
+  } catch (error) {
+    next();
+  }
+});
+
+
 
 // Health check endpoint for render.com
 app.get('/health', (req, res) => {
@@ -576,6 +729,17 @@ app.get('/health', (req, res) => {
     primaryDomain: PRIMARY_DOMAIN,
     timestamp: new Date().toISOString() 
   });
+});
+
+// Catch-all handler for undefined routes (must be last)
+app.use('*', (req, res) => {
+  // Check if it's an API route
+  if (req.originalUrl.startsWith('/api/')) {
+    return res.status(404).json({ error: 'API endpoint not found' });
+  }
+  
+  // For non-API routes, serve the main index.html (SPA fallback)
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Start server
