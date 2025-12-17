@@ -35,3 +35,11 @@
 [x] Update server configuration for production environment
 [x] Test multi-domain routing in production context
 [x] Ensure proper fallback handling for all routes
+
+## Upload Issue Troubleshooting
+[x] Check server logs for upload errors
+[x] Test upload endpoint directly
+[x] Verify authentication middleware
+[x] Check file system permissions
+[x] Validate upload request format
+[x] Test site creation flow end-to-end

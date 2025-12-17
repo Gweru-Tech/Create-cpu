@@ -1,1 +1,84 @@
-{}
+{
+  "735fd33e-8eec-47f7-9da7-cca211e4856b": {
+    "id": "735fd33e-8eec-47f7-9da7-cca211e4856b",
+    "username": "testuser",
+    "email": "test@example.com",
+    "password": "$2b$10$rBU8/YB72GuBidwlwxQwuOzDNpvl7.sAPmgILehNrRadE0M29HkW.",
+    "createdAt": "2025-12-17T06:24:33.132Z",
+    "subdomain": "testuser-happyrealm7722",
+    "sites": [
+      {
+        "id": "950c4763-1853-4208-bd0e-cca9f15cd327",
+        "name": "Test Site",
+        "slug": "test-site",
+        "domain": "ntandostore",
+        "urls": {
+          "ntandostore": "https://testuser-happyrealm7722-test-site.ntandostore",
+          "ntando.app": "https://testuser-happyrealm7722-test-site.ntando.app",
+          "ntando.cloud": "https://testuser-happyrealm7722-test-site.ntando.cloud",
+          "ntando.zw": "https://testuser-happyrealm7722-test-site.ntando.zw",
+          "ntl.cloud": "https://testuser-happyrealm7722-test-site.ntl.cloud",
+          "ntl.ai": "https://testuser-happyrealm7722-test-site.ntl.ai",
+          "ntando.tech": "https://testuser-happyrealm7722-test-site.ntando.tech",
+          "ntando.dev": "https://testuser-happyrealm7722-test-site.ntando.dev",
+          "ntando.host": "https://testuser-happyrealm7722-test-site.ntando.host",
+          "ntando.site": "https://testuser-happyrealm7722-test-site.ntando.site"
+        },
+        "createdAt": "2025-12-17T06:24:41.296Z",
+        "updatedAt": "2025-12-17T06:24:41.296Z",
+        "visits": 0,
+        "published": true
+      }
+    ]
+  },
+  "98eae169-22e1-4d2a-88a4-29bc35ecebbd": {
+    "id": "98eae169-22e1-4d2a-88a4-29bc35ecebbd",
+    "username": "uploadtest",
+    "email": "uploadtest@example.com",
+    "password": "$2b$10$ipQo2pLwQAYRrMoUO64ek.1d9YXIyQYsqlB6GXPPXrZ/vuEgr8eq2",
+    "createdAt": "2025-12-17T06:26:33.617Z",
+    "subdomain": "uploadtest-quickworld828",
+    "sites": [
+      {
+        "id": "561f8b85-4c4d-4f6a-b591-3f1a72c94f39",
+        "name": "Upload Test Site",
+        "slug": "upload-test",
+        "domain": "ntandostore",
+        "urls": {
+          "ntandostore": "https://uploadtest-quickworld828-upload-test.ntandostore",
+          "ntando.app": "https://uploadtest-quickworld828-upload-test.ntando.app",
+          "ntando.cloud": "https://uploadtest-quickworld828-upload-test.ntando.cloud",
+          "ntando.zw": "https://uploadtest-quickworld828-upload-test.ntando.zw",
+          "ntl.cloud": "https://uploadtest-quickworld828-upload-test.ntl.cloud",
+          "ntl.ai": "https://uploadtest-quickworld828-upload-test.ntl.ai",
+          "ntando.tech": "https://uploadtest-quickworld828-upload-test.ntando.tech",
+          "ntando.dev": "https://uploadtest-quickworld828-upload-test.ntando.dev",
+          "ntando.host": "https://uploadtest-quickworld828-upload-test.ntando.host",
+          "ntando.site": "https://uploadtest-quickworld828-upload-test.ntando.site"
+        },
+        "createdAt": "2025-12-17T06:26:33.630Z",
+        "updatedAt": "2025-12-17T06:26:33.630Z",
+        "visits": 0,
+        "published": true
+      }
+    ]
+  },
+  "15f1c82f-74cb-4294-8c72-78103895b060": {
+    "id": "15f1c82f-74cb-4294-8c72-78103895b060",
+    "username": "Ntandoofc",
+    "email": "2qvav3az6y@yzcalo.com",
+    "password": "$2b$10$P1icUvfzoZBt7yHhPx1ReupQTJSyAty3jUKuWtnHyeC6a3Ci1z0/W",
+    "createdAt": "2025-12-17T06:27:13.179Z",
+    "subdomain": "Ntandoofc-warmplace6627",
+    "sites": []
+  },
+  "051f0088-0d5d-4c09-84d2-c795aad4736e": {
+    "id": "051f0088-0d5d-4c09-84d2-c795aad4736e",
+    "username": "Create",
+    "email": "Gwerutechnology@gmail.com",
+    "password": "$2b$10$GJfTeQzdrkMsruCHd50OLO8Os/ezFw070Oa0i/djyse.ucPHFzh8q",
+    "createdAt": "2025-12-17T06:34:40.178Z",
+    "subdomain": "Create-brightzone3016",
+    "sites": []
+  }
+}
