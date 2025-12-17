@@ -1097,8 +1097,8 @@ document.addEventListener('DOMContentLoaded', function() {
             try {
                 const response = await fetch('/api/domains');
                 const data = await response.json();
-                supportedDomains = data.supported;
-                selectedDomain = data.primary;
+                supportedDomains = data.supportedDomains;
+                selectedDomain = data.primaryDomain;
                 
                 // Render domain buttons
                 const domainButtons = document.getElementById('domainButtons');
