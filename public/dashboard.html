@@ -1255,13 +1255,25 @@ document.addEventListener('DOMContentLoaded', function() {
             const siteSlug = document.getElementById('siteSlug').value || siteName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
             
             if (currentUser && supportedDomains.length > 0) {
-                // Generate URLs for all domains
-                const allUrls = supportedDomains.map(domain => 
-                    `https://${currentUser.subdomain}-${siteSlug}.${domain}`
-                );
+                // Check if we're in production (Render.com)
+                const isProduction = window.location.hostname !== 'localhost';
                 
-                // Update primary URL display
-                const primaryUrl = `https://${currentUser.subdomain}-${siteSlug}.${selectedDomain}`;
+                let primaryUrl, allUrls;
+                
+                if (isProduction) {
+                    // For Render.com, use the /site/ path format
+                    primaryUrl = `${window.location.origin}/site/${currentUser.subdomain}/${siteSlug}/`;
+                    allUrls = supportedDomains.map(domain => 
+                        `https://${currentUser.subdomain}-${siteSlug}.${domain}`
+                    );
+                } else {
+                    // For local development, use the actual domain format
+                    allUrls = supportedDomains.map(domain => 
+                        `https://${currentUser.subdomain}-${siteSlug}.${domain}`
+                    );
+                    primaryUrl = `https://${currentUser.subdomain}-${siteSlug}.${selectedDomain}`;
+                }
+                
                 document.getElementById('siteUrlText').textContent = primaryUrl;
                 
                 // Update all URLs display
